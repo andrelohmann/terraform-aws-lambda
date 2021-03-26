@@ -56,8 +56,8 @@ variable "maximum_record_age_in_seconds" {
 }
 
 variable "maximum_retry_attempts" {
-  default     = 10000
-  description = "The maximum number of times to retry when the function returns an error. Only available for stream sources (DynamoDB and Kinesis). Minimum of 0, maximum and default of 10000."
+  default     = 1
+  description = "The maximum number of times to retry when the function returns an error. Minimum of 0, maximum and default of 10000"
 }
 
 variable "parallelization_factor" {

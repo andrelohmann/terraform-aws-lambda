@@ -134,7 +134,7 @@ variable "maximum_batching_window_in_seconds" {
 }
 
 variable "maximum_retry_attempts" {
-  default     = -1
+  default     = 1
   description = "The maximum number of times to retry when the function returns an error. Minimum of 0, maximum and default of 10000"
 }
 

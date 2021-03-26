@@ -38,7 +38,7 @@ data "aws_iam_policy_document" "stream_policy_document" {
 
 resource "aws_iam_policy" "stream_policy" {
   count       = var.enable ? 1 : 0
-  name        = "${var.function_name}-stream-consumer-${data.aws_region.current[count.index].name}"
+  name        = "${random_pet.function_name.keepers.function_name}-stream-consumer-${data.aws_region.current.name}-${random_pet.function_name.id}"
   description = "Provides minimum DynamoDb stream processing permissions for ${var.function_name}."
   policy      = data.aws_iam_policy_document.stream_policy_document[count.index].json
 }
@@ -47,4 +47,11 @@ resource "aws_iam_role_policy_attachment" "stream_policy_attachment" {
   count      = var.enable ? 1 : 0
   role       = var.iam_role_name
   policy_arn = aws_iam_policy.stream_policy[count.index].arn
+}
+
+resource "random_pet" "function_name" {
+  keepers = {
+    # Generate a new pet name each time we rename the function
+    function_name = var.function_name
+  }
 }
