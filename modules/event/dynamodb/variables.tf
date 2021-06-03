@@ -30,10 +30,11 @@ variable "bisect_batch_on_function_error" {
   description = "If the function returns an error, split the batch in two and retry. Only available for stream sources (DynamoDB and Kinesis). Defaults to false."
 }
 
-variable "destination_config" {
-  default     = null
-  description = "An Amazon SQS queue or Amazon SNS topic destination for failed records. Only available for stream sources (DynamoDB and Kinesis). Detailed below."
-}
+# Just a quick fix for non working dynamic block
+# variable "destination_config" {
+#   default     = null
+#   description = "An Amazon SQS queue or Amazon SNS topic destination for failed records. Only available for stream sources (DynamoDB and Kinesis). Detailed below."
+# }
 
 variable "enable" {
   default     = false
