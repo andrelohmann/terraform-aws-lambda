@@ -6,7 +6,6 @@ resource "aws_lambda_event_source_mapping" "stream_source" {
   count                               = var.enable ? 1 : 0
   batch_size                          = var.batch_size
   bisect_batch_on_function_error      = var.bisect_batch_on_function_error
-  destination_config                  = var.destination_config
   enabled                             = var.event_source_mapping_enabled
   event_source_arn                    = var.event_source_arn
   function_name                       = var.function_name
@@ -17,6 +16,15 @@ resource "aws_lambda_event_source_mapping" "stream_source" {
   starting_position                   = var.starting_position
   starting_position_timestamp         = var.starting_position_timestamp
   topics                              = var.topics
+  
+  # dynamic "destination_config" {
+  #   for_each = var.destination_configs
+  #   content {
+  #     namespace = destination_config.value["namespace"]
+  #     name = destination_config.value["name"]
+  #     value = destination_config.value["value"]
+  #   }
+  # }
 }
 
 // see https://github.com/awslabs/serverless-application-model/blob/develop/samtranslator/policy_templates_data/policy_templates.json
@@ -38,7 +46,7 @@ data "aws_iam_policy_document" "stream_policy_document" {
 
 resource "aws_iam_policy" "stream_policy" {
   count       = var.enable ? 1 : 0
-  name        = "${random_pet.function_name.keepers.function_name}-stream-consumer-${data.aws_region.current.name}-${random_pet.function_name.id}"
+  name        = "${random_pet.function_name.keepers.function_name}-stream-consumer-${data.aws_region.current[count.index].name}-${random_pet.function_name.id}"
   description = "Provides minimum DynamoDb stream processing permissions for ${var.function_name}."
   policy      = data.aws_iam_policy_document.stream_policy_document[count.index].json
 }
